@@ -14,4 +14,13 @@ const getEvents = async (req, res) => {
   res.json(events);
 };
 
+exports.getEvents = (req, res) => {
+  res.status(200).json({ message: "List of events" });
+};
+
+exports.createEvent = (req, res) => {
+  res.status(201).json({ message: "Event created successfully" });
+};
+
+
 module.exports = { createEvent, getEvents };
