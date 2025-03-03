@@ -9,8 +9,13 @@ const createEvent = async (req, res) => {
   }
 };
 
-const getEvents = async (req, res) => {
-  const events = await Event.find();
+const events = [
+  { id: 1, title: "Music Festival", date: "2025-03-10" },
+  { id: 2, title: "Tech Conference", date: "2025-04-15" }
+];
+
+// Get all events
+const getAllEvents = (req, res) => {
   res.json(events);
 };
 
@@ -23,4 +28,4 @@ exports.createEvent = (req, res) => {
 };
 
 
-module.exports = { createEvent, getEvents };
+module.exports = { createEvent, getAllEvents };

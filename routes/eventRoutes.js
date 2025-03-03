@@ -1,5 +1,5 @@
 const express = require("express");
-const { createEvent, getEvents } = require("../controllers/eventController");
+const { createEvent, getAllEvents } = require("../controllers/eventController");
 const router = express.Router();
 
 
@@ -39,6 +39,6 @@ router.get("/:id", async (req, res) => {
 
 
 router.post("/", createEvent);
-router.get("/", getEvents);
+router.get("/", getAllEvents);
 
 module.exports = router;

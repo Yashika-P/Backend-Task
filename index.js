@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", require("./routes/authRoutes"));  
-app.use("/api/events", eventRoutes);
+app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/tickets", require("./routes/ticketRoutes"));
 app.post("/api/login", async (req, res) => {
