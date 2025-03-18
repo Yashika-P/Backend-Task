@@ -1,31 +1,61 @@
 const Event = require("../models/eventModel");
 
+
+
 const createEvent = async (req, res) => {
   try {
-    const event = await Event.create(req.body);
+    const { title, description, date, time, location, ticketPrice, organizer, image } = req.body;
+
+    const event = new Event({
+      title,
+      description,
+      date,
+      time,
+      location,
+      ticketPrice,
+      organizer,
+      image,
+    });
+
+    await event.save();
     res.status(201).json(event);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("❌ Error creating event:", error);
+    res.status(500).json({ message: "Failed to create event" });
   }
 };
 
-const events = [
-  { id: 1, title: "Music Festival", date: "2025-03-10" },
-  { id: 2, title: "Tech Conference", date: "2025-04-15" }
-];
-
-// Get all events
-const getAllEvents = (req, res) => {
-  res.json(events);
+// ✅ Get all events from MongoDB
+const getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.find();
+    console.log("📌 Events from MongoDB:", events); // ✅ Debug log
+    res.status(200).json(events);
+  } catch (error) {
+    console.error("❌ Failed to fetch events:", error);
+    res.status(500).json({ message: "Failed to fetch events", error });
+  }
 };
 
-exports.getEvents = (req, res) => {
-  res.status(200).json({ message: "List of events" });
+// ✅ Get a single event by ID
+const getEventById = async (req, res) => {
+  console.log("Incoming request for event:", req.params.id);
+
+  try {
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+      console.log("Event not found");
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    console.log("Event data:", event);
+    res.status(200).json(event);
+  } catch (error) {
+    console.error("Error fetching event:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-exports.createEvent = (req, res) => {
-  res.status(201).json({ message: "Event created successfully" });
-};
-
-
-module.exports = { createEvent, getAllEvents };
+// ✅ Export functions
+module.exports = { createEvent, getAllEvents, getEventById };
