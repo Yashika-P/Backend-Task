@@ -13,16 +13,11 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(express.json());
-app.use(cors());
-
-// 🔥 REMOVE "X-Powered-By" HEADER FOR SECURITY 🔥
-app.disable("x-powered-by");
 
 // ✅ Proper CORS Configuration
 const allowedOrigins = [
-  "http://localhost:3000", // For development
-  "https://yashi-event-frontend.netlify.app" // For production
+  "http://localhost:3000", // ✅ For local development
+  "https://yashi-event-frontend.netlify.app" // ✅ Your deployed frontend URL
 ];
 
 app.use(cors({
@@ -35,35 +30,37 @@ app.use(cors({
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: true, // ✅ Allow cookies & authentication
 }));
 
+// ✅ Middlewares
+app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 
-// Test Route
+// 🔥 REMOVE "X-Powered-By" HEADER FOR SECURITY 🔥
+app.disable("x-powered-by");
+
+// ✅ Test Route (Keep This to Verify)
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.use("/api/auth", authRoutes);  
-app.use("/api/events", eventRoutes);// ✅ Ensure this path is correct
-app.use('/api/attendees', require('./routes/attendeeRoutes'));
-app.use("/api/users", require("./routes/userRoutes"));
-app.use('/api/tickets', ticketRoutes);
+// ✅ Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/attendees", attendeeRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/tickets", ticketRoutes);
 app.post("/api/login", async (req, res) => {
   res.json({ message: "Login successful" });
 });
 
-console.log("Event routes are loaded");
 
-
-// Handle 404 Errors
+// ✅ Handle 404 Errors
 app.use((req, res) => {
   res.status(404).json({ message: "API route not found" });
 });
 
-
-
-
+// ✅ Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

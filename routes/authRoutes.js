@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { loginUser } = require("../controllers/authController");
+const { registerUser, loginUser } = require("../controllers/authController");// ✅ Fix import
 const User = require('../models/userModel'); 
 
 // Register User
@@ -30,18 +30,37 @@ router.post('/register', async (req, res) => {
 module.exports = router;
 
 // Sample Login API
-router.post("/login", (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  // Dummy check (replace with real authentication)
-  if (email === "test@example.com" && password === "123456") {
-    res.json({ message: "Login successful", user: { email } });
-  } else {
-    res.status(401).json({ message: "Invalid credentials" });
+  try {
+    // ✅ Check for a user with that email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // ✅ Compare passwords directly (no bcrypt used)
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // ✅ If successful, return user data
+    res.status(200).json({ message: "Login successful", user });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
 
 
-router.post('/login', loginUser);
+
+// ✅ Register User Route
+router.post("/register", registerUser);
+
+// ✅ Login User Route
+router.post("/login", loginUser);
 
 module.exports = router;
