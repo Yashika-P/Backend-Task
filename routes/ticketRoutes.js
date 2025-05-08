@@ -4,7 +4,7 @@ const { createTicket, getAllTickets, deleteTicket } = require("../controllers/ti
 const router = express.Router();
 
 // ✅ Create Ticket Route
-router.post("/", createTicket);
+router.post("/",createTicket);
 
 // ✅ Get All Tickets Route
 router.get("/", getAllTickets);
@@ -12,6 +12,6 @@ router.get("/", getAllTickets);
 // ✅ Delete Ticket Route
 router.delete("/:id", deleteTicket);
 
-module.exports = router;
 
+module.exports = router;
 

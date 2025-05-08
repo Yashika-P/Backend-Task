@@ -1,31 +1,33 @@
 const Ticket = require('../models/ticketModel');
 
 const createTicket = async (req, res) => {
-  const { eventId, userId, ticketType, price, quantity } = req.body;
+    try {
+        const { eventId, userId, ticketType, price, quantity } = req.body;
 
-  // ✅ Validate data before saving
-  if (!eventId || !userId || !ticketType || !price || !quantity) {
-    return res.status(400).json({ message: "Invalid request data" });
-  }
+        // ✅ Create a new ticket
+        const newTicket = await Ticket.create({
+            eventId,
+            userId,
+            ticketType,
+            price,
+            quantity,
+            purchaseDate: new Date(),
+        });
 
-  try {
-    const ticket = new Ticket({
-      eventId,
-      userId,
-      ticketType,
-      price,
-      quantity,
-    });
-
-    await ticket.save();
-
-    res.status(201).json({ message: "Ticket purchased successfully", ticket });
-  } catch (error) {
-    console.error("Failed to create ticket:", error);
-    res.status(500).json({ message: "Failed to purchase ticket" });
-  }
+        // ✅ Send back a proper response
+        res.status(201).json({
+            success: true,  // ✅ Make sure this line is present
+            message: "Ticket purchased successfully",
+            ticket: newTicket,
+        });
+    } catch (error) {
+        console.error("🚨 Error creating ticket:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to purchase ticket. Please try again.",
+        });
+    }
 };
-
 const getAllTickets = async (req, res) => {
   try {
     const tickets = await Ticket.find().populate("eventId userId");
