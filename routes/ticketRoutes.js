@@ -1,5 +1,5 @@
 const express = require("express");
-const { createTicket, getAllTickets, deleteTicket } = require("../controllers/ticketController");
+const { createTicket, getAllTickets, deleteTicket, getUserTickets } = require("../controllers/ticketController");
 
 const router = express.Router();
 
@@ -8,6 +8,10 @@ router.post("/",createTicket);
 
 // ✅ Get All Tickets Route
 router.get("/", getAllTickets);
+
+// ✅ Get User Tickets Route
+router.get("/user/:userId", getUserTickets);
+
 
 // ✅ Delete Ticket Route
 router.delete("/:id", deleteTicket);

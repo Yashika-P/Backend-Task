@@ -49,5 +49,20 @@ const deleteTicket = async (req, res) => {
   }
 };
 
+// ✅ Get Tickets Purchased by User
+const getUserTickets = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const tickets = await Ticket.find({ userId }).populate("eventId", "title date location image");
+        res.status(200).json(tickets);
+    } catch (error) {
+        console.error("Error fetching user tickets:", error);
+        res.status(500).json({ message: "Error fetching user tickets" });
+    }
+};
+
+
+
+
 // ✅ Export the functions correctly
-module.exports = { createTicket, getAllTickets, deleteTicket };
+module.exports = { createTicket, getAllTickets, deleteTicket, getUserTickets };
